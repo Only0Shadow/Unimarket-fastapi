@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Register — UniMarket{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <h1>Create your account</h1>
+    {% if errors %}
+    <div class="alert alert-error">
+        <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+    <form method="post" action="/register" class="form-grid">
+        <label>First name<input type="text" name="first_name" required></label>
+        <label>Last name<input type="text" name="last_name" required></label>
+        <label>Username<input type="text" name="username" required></label>
+        <label>Email<input type="email" name="email" required></label>
+        <label>Phone number<input type="tel" name="phone_number"></label>
+        <label>Password<input type="password" name="password" required></label>
+        <label>Confirm password<input type="password" name="confirm_password" required></label>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <p class="auth-alt">Already have an account? <a href="/login">Log in</a></p>
+</div>
+{% endblock %}

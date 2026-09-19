@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Stores — UniMarket{% endblock %}
+{% block content %}
+<h1>Campus Stores</h1>
+<div class="vendor-grid">
+    {% for vendor in vendors %}
+    <a href="/stores/{{ vendor.store_slug }}" class="vendor-card">
+        <h3>{{ vendor.store_name }}</h3>
+        <p>{{ vendor.description or '' }}</p>
+        <span class="muted">{{ vendor.products|length }} products</span>
+    </a>
+    {% else %}
+    <p class="empty-state">No approved stores yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

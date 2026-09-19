@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "partials/product_card.html" as pc %}
+{% import "partials/pagination.html" as pg %}
+{% block title %}{{ category.name }} — UniMarket{% endblock %}
+{% block content %}
+<h1>{{ category.name }}</h1>
+{% if category.description %}<p class="muted">{{ category.description }}</p>{% endif %}
+
+{% if page_obj.items %}
+<div class="product-grid">
+    {% for product in page_obj.items %}{{ pc.product_card(product) }}{% endfor %}
+</div>
+{{ pg.pagination(page_obj, '/categories/' + category.slug) }}
+{% else %}
+<p class="empty-state">No products in this category yet.</p>
+{% endif %}
+{% endblock %}

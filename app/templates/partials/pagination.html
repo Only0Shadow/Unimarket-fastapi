@@ -1,0 +1,13 @@
+{% macro pagination(page_obj, base_path, extra_query='') %}
+{% if page_obj and page_obj.total_pages > 1 %}
+<nav class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="{{ base_path }}?page={{ page_obj.page - 1 }}{{ extra_query }}">&laquo; Prev</a>
+    {% endif %}
+    <span class="pagination-info">Page {{ page_obj.page }} of {{ page_obj.total_pages }} ({{ page_obj.total }} items)</span>
+    {% if page_obj.has_next %}
+    <a href="{{ base_path }}?page={{ page_obj.page + 1 }}{{ extra_query }}">Next &raquo;</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endmacro %}

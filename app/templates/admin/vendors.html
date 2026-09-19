@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Manage Vendors — Admin{% endblock %}
+{% block content %}
+<h1>Manage Vendors</h1>
+<table class="table">
+    <thead><tr><th>Store</th><th>Owner</th><th>Status</th><th>Applied</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for vendor in vendors %}
+        <tr>
+            <td>{{ vendor.store_name }}</td>
+            <td>{{ vendor.owner.username }}</td>
+            <td><span class="status status-{{ vendor.status.value }}">{{ vendor.status.value|title }}</span></td>
+            <td>{{ vendor.created_at.strftime('%d %b %Y') }}</td>
+            <td>
+                <form action="/admin/vendors/{{ vendor.id }}/status" method="post" class="inline-form">
+                    <select name="new_status">
+                        <option value="approved" {% if vendor.status.value == 'approved' %}selected{% endif %}>Approved</option>
+                        <option value="pending" {% if vendor.status.value == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="suspended" {% if vendor.status.value == 'suspended' %}selected{% endif %}>Suspended</option>
+                        <option value="rejected" {% if vendor.status.value == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                    <button type="submit" class="btn btn-small">Update</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

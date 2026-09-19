@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Edit Store — UniMarket{% endblock %}
+{% block content %}
+<h1>Edit Store</h1>
+<form method="post" action="/vendor/store/edit" class="form-grid">
+    <label>Store name<input type="text" name="store_name" value="{{ vendor.store_name }}" required></label>
+    <label>Description<textarea name="description">{{ vendor.description or '' }}</textarea></label>
+    <label>Logo URL<input type="text" name="logo" value="{{ vendor.logo or '' }}"></label>
+    <label>Banner URL<input type="text" name="banner" value="{{ vendor.banner or '' }}"></label>
+    <label>Contact email<input type="email" name="contact_email" value="{{ vendor.contact_email or '' }}"></label>
+    <label>Contact phone<input type="tel" name="contact_phone" value="{{ vendor.contact_phone or '' }}"></label>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+{% endblock %}

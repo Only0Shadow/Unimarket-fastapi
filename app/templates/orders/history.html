@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}My Orders — UniMarket{% endblock %}
+{% block content %}
+<h1>My Orders</h1>
+{% if orders %}
+<table class="table">
+    <thead><tr><th>Order #</th><th>Date</th><th>Status</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+            <td><span class="status status-{{ order.status.value }}">{{ order.status.value.replace('_', ' ')|title }}</span></td>
+            <td>₦{{ "{:,.2f}".format(order.total) }}</td>
+            <td><a href="/orders/{{ order.id }}">View</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">You haven't placed any orders yet. <a href="/shop">Start shopping &raquo;</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Notifications — UniMarket{% endblock %}
+{% block content %}
+<h1>Notifications</h1>
+{% if notifications %}
+<form action="/notifications/read-all" method="post"><button type="submit" class="btn btn-outline">Mark all as read</button></form>
+<ul class="activity-feed">
+    {% for n in notifications %}
+    <li class="{{ '' if n.is_read else 'unread' }}">
+        <strong>{{ n.title }}</strong> &mdash; {{ n.message }}
+        <span class="muted">{{ n.created_at.strftime('%d %b %Y %H:%M') }}</span>
+        {% if not n.is_read %}
+        <form action="/notifications/{{ n.id }}/read" method="post" class="inline-form">
+            <button type="submit" class="link-button">Mark read</button>
+        </form>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No notifications yet.</p>
+{% endif %}
+{% endblock %}

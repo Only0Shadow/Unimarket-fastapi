@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Become a Vendor — UniMarket{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <h1>Become a Vendor</h1>
+    <p class="muted">Your application will be reviewed by an administrator before your store goes live.</p>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="post" action="/vendor/apply" class="form-grid">
+        <label>Store name<input type="text" name="store_name" required></label>
+        <label>Description<textarea name="description"></textarea></label>
+        <label>Contact email<input type="email" name="contact_email"></label>
+        <label>Contact phone<input type="tel" name="contact_phone"></label>
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+    </form>
+</div>
+{% endblock %}

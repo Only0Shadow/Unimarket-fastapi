@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "partials/product_card.html" as pc %}
+{% block title %}UniMarket — Everything Campus{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>Everything you need on campus,<br>delivered to your hostel.</h1>
+        <p>Food, textbooks, electronics, fashion &amp; more — from vendors right on your campus.</p>
+        <a href="/shop" class="btn btn-primary">Start Shopping</a>
+    </div>
+</section>
+
+<section class="section">
+    <h2>Featured Categories</h2>
+    <div class="category-grid">
+        {% for category in categories %}
+        <a href="/categories/{{ category.slug }}" class="category-chip">{{ category.name }}</a>
+        {% else %}
+        <p class="empty-state">No categories yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+{% if featured_products %}
+<section class="section">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+        {% for product in featured_products %}{{ pc.product_card(product) }}{% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if deals_products %}
+<section class="section">
+    <h2>Campus Deals 🔥</h2>
+    <div class="product-grid">
+        {% for product in deals_products %}{{ pc.product_card(product) }}{% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="section">
+    <h2>Latest Products</h2>
+    {% if latest_products %}
+    <div class="product-grid">
+        {% for product in latest_products %}{{ pc.product_card(product) }}{% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No products yet — check back soon, or <a href="/vendor/apply">become a vendor</a>.</p>
+    {% endif %}
+</section>
+
+{% if vendors %}
+<section class="section">
+    <h2>Campus Stores</h2>
+    <div class="vendor-grid">
+        {% for vendor in vendors %}
+        <a href="/stores/{{ vendor.store_slug }}" class="vendor-chip">
+            <strong>{{ vendor.store_name }}</strong>
+            <span>{{ vendor.products|length }} products</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import "partials/product_card.html" as pc %}
+{% import "partials/pagination.html" as pg %}
+{% block title %}{{ vendor.store_name }} — UniMarket{% endblock %}
+{% block content %}
+<div class="store-header">
+    <h1>{{ vendor.store_name }}</h1>
+    <p>{{ vendor.description or '' }}</p>
+</div>
+
+{% if page_obj.items %}
+<div class="product-grid">
+    {% for product in page_obj.items %}{{ pc.product_card(product) }}{% endfor %}
+</div>
+{{ pg.pagination(page_obj, '/stores/' + vendor.store_slug) }}
+{% else %}
+<p class="empty-state">This store has no products listed yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Access Denied — UniMarket{% endblock %}
+{% block content %}
+<div class="error-page">
+    <h1>403</h1>
+    <p>{{ detail or "You don't have permission to view this page." }}</p>
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Mock Checkout — UniMarket{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 480px; margin: 40px auto;">
+    <h1>🧪 Mock Checkout</h1>
+    <p class="muted">
+        No real gateway is configured (PAYMENT_GATEWAY=mock). This page stands
+        in for Paystack/Flutterwave/Stripe's own hosted checkout page so the
+        full payment flow can be tested without live keys.
+    </p>
+    <p><strong>Reference:</strong> {{ reference }}</p>
+    <p><strong>Amount:</strong> {{ payment.currency }} {{ "{:,.2f}".format(payment.amount) }}</p>
+
+    <form action="/payments/mock-checkout/{{ reference }}/resolve" method="post" style="display:flex; gap:10px; margin-top:20px;">
+        <button type="submit" name="outcome" value="success" class="btn">Simulate Successful Payment</button>
+        <button type="submit" name="outcome" value="failed" class="btn btn-outline danger">Simulate Failed Payment</button>
+    </form>
+</div>
+{% endblock %}

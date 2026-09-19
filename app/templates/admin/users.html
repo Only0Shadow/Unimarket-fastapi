@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Manage Users — Admin{% endblock %}
+{% block content %}
+<h1>Manage Users</h1>
+<table class="table">
+    <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role.value }}</td>
+            <td>{{ 'Active' if u.is_active else 'Deactivated' }}</td>
+            <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+            <td>
+                <form action="/admin/users/{{ u.id }}/toggle-active" method="post" class="inline-form">
+                    <button type="submit" class="link-button {{ 'danger' if u.is_active else '' }}">
+                        {{ 'Deactivate' if u.is_active else 'Reactivate' }}
+                    </button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

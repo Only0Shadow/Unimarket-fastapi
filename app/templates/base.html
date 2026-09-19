@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}University Marketplace{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="/">🎓 Uni<span>Market</span></a>
+
+            <form class="nav-search" action="/search" method="get">
+                <input type="text" name="q" placeholder="Search products, stores, categories..." value="{{ request.query_params.get('q', '') }}">
+                <button type="submit">Search</button>
+            </form>
+
+            <nav class="nav-links">
+                <a href="/shop">Shop</a>
+                <a href="/categories">Categories</a>
+                <a href="/stores">Stores</a>
+                {% if user %}
+                    <a href="/cart">Cart{% if user.cart and user.cart.item_count %} <span class="badge">{{ user.cart.item_count }}</span>{% endif %}</a>
+                    <a href="/wishlist">Wishlist</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/notifications">🔔{% if user.unread_notifications_count %} <span class="badge">{{ user.unread_notifications_count }}</span>{% endif %}</a>
+                    {% if user.role.value == 'vendor' %}<a href="/vendor/dashboard">Vendor</a>{% endif %}
+                    {% if user.role.value == 'admin' %}<a href="/admin">Admin</a>{% endif %}
+                    <a href="/account">{{ user.username }}</a>
+                    <form action="/logout" method="post" class="inline-form"><button type="submit" class="link-button">Logout</button></form>
+                {% else %}
+                    <a href="/login">Login</a>
+                    <a class="cta" href="/register">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div>
+                <h4>UniMarket</h4>
+                <p>The campus marketplace for students, by students.</p>
+            </div>
+            <div>
+                <h4>Shop</h4>
+                <a href="/shop">All Products</a>
+                <a href="/categories">Categories</a>
+                <a href="/stores">Stores</a>
+            </div>
+            <div>
+                <h4>Sell</h4>
+                <a href="/vendor/apply">Become a Vendor</a>
+            </div>
+            <div>
+                <h4>Account</h4>
+                <a href="/register">Register</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; {{ 2026 }} UniMarket &mdash; Campus Marketplace Demo</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

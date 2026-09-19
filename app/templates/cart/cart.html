@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}My Cart — UniMarket{% endblock %}
+{% block content %}
+<h1>My Cart</h1>
+{% if cart.items %}
+<table class="table">
+    <thead><tr><th>Product</th><th>Unit Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr></thead>
+    <tbody>
+    {% for item in cart.items %}
+        <tr>
+            <td><a href="/products/{{ item.product.slug }}">{{ item.product.name }}</a></td>
+            <td>₦{{ "{:,.2f}".format(item.unit_price) }}</td>
+            <td>
+                <form action="/cart/items/{{ item.id }}/update" method="post" class="inline-form">
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.quantity_available }}" onchange="this.form.submit()">
+                </form>
+            </td>
+            <td>₦{{ "{:,.2f}".format(item.subtotal) }}</td>
+            <td>
+                <form action="/cart/items/{{ item.id }}/remove" method="post" class="inline-form">
+                    <button type="submit" class="link-button danger">Remove</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="cart-summary">
+    <p>Subtotal: <strong>₦{{ "{:,.2f}".format(cart.subtotal) }}</strong></p>
+    <p>Estimated Delivery: <strong>₦{{ "{:,.2f}".format(delivery_fee) }}</strong></p>
+    <p class="total">Estimated Total: <strong>₦{{ "{:,.2f}".format(estimated_total) }}</strong></p>
+    <div class="cart-actions">
+        <form action="/cart/clear" method="post" class="inline-form"><button type="submit" class="btn btn-outline">Clear Cart</button></form>
+        <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
+</div>
+{% else %}
+<p class="empty-state">Your cart is empty. <a href="/shop">Start shopping &raquo;</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}My Account — UniMarket{% endblock %}
+{% block content %}
+<h1>My Account</h1>
+
+<div class="account-grid">
+    <section class="card">
+        <h2>Profile</h2>
+        <form method="post" action="/account/profile" class="form-grid">
+            <label>First name<input type="text" name="first_name" value="{{ user.first_name }}" required></label>
+            <label>Last name<input type="text" name="last_name" value="{{ user.last_name }}" required></label>
+            <label>Phone number<input type="tel" name="phone_number" value="{{ user.phone_number or '' }}"></label>
+            <label>University<input type="text" name="university" value="{{ user.profile.university or '' }}"></label>
+            <label>Student ID<input type="text" name="student_id" value="{{ user.profile.student_id or '' }}"></label>
+            <label>Hostel<input type="text" name="hostel" value="{{ user.profile.hostel or '' }}"></label>
+            <p class="muted">Username: {{ user.username }} &middot; Email: {{ user.email }} &middot; Role: {{ user.role.value }} &middot; Joined {{ user.created_at.strftime('%d %b %Y') }}</p>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        {% if user.role.value == 'student' %}
+        <p><a href="/vendor/apply" class="btn btn-outline">Become a Vendor</a></p>
+        {% endif %}
+    </section>
+
+    <section class="card">
+        <h2>Delivery Addresses</h2>
+        {% for addr in addresses %}
+        <div class="address-item">
+            <strong>{{ addr.label }}</strong>{% if addr.is_default %} <span class="badge">Default</span>{% endif %}
+            <p>{{ addr.recipient_name }} &middot; {{ addr.phone_number }}</p>
+            <p>{{ addr.university }}, {{ addr.hostel }}{% if addr.block %}, Block {{ addr.block }}{% endif %}{% if addr.room %}, Room {{ addr.room }}{% endif %}</p>
+            <form method="post" action="/account/addresses/{{ addr.id }}/delete" class="inline-form">
+                <button type="submit" class="link-button danger">Remove</button>
+            </form>
+        </div>
+        {% else %}
+        <p class="empty-state">No saved addresses yet.</p>
+        {% endfor %}
+
+        <details>
+            <summary>Add a new address</summary>
+            <form method="post" action="/account/addresses" class="form-grid">
+                <label>Label<input type="text" name="label" value="Hostel"></label>
+                <label>Recipient name<input type="text" name="recipient_name" required></label>
+                <label>Phone number<input type="tel" name="phone_number" required></label>
+                <label>University<input type="text" name="university" required></label>
+                <label>Hostel<input type="text" name="hostel" required></label>
+                <label>Block<input type="text" name="block"></label>
+                <label>Room<input type="text" name="room"></label>
+                <label>Campus location<input type="text" name="campus_location"></label>
+                <label>Instructions<textarea name="instructions"></textarea></label>
+                <label class="checkbox-label"><input type="checkbox" name="is_default"> Set as default</label>
+                <button type="submit" class="btn btn-primary">Save Address</button>
+            </form>
+        </details>
+    </section>
+
+    <section class="card">
+        <h2>Recent Orders</h2>
+        {% for order in orders[:5] %}
+        <div class="order-row">
+            <a href="/orders/{{ order.id }}">{{ order.order_number }}</a>
+            <span class="status status-{{ order.status.value }}">{{ order.status.value.replace('_', ' ')|title }}</span>
+            <span>₦{{ "{:,.2f}".format(order.total) }}</span>
+        </div>
+        {% else %}
+        <p class="empty-state">No orders yet.</p>
+        {% endfor %}
+        <p><a href="/orders">View all orders &raquo;</a></p>
+    </section>
+</div>
+{% endblock %}

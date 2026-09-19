@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Orders — Vendor Dashboard{% endblock %}
+{% block content %}
+<h1>Orders Containing My Products</h1>
+{% if orders %}
+<table class="table">
+    <thead><tr><th>Order #</th><th>Date</th><th>Status</th><th>Update Status</th></tr></thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td><a href="/orders/{{ order.id }}">{{ order.order_number }}</a></td>
+            <td>{{ order.created_at.strftime('%d %b %Y') }}</td>
+            <td><span class="status status-{{ order.status.value }}">{{ order.status.value.replace('_', ' ')|title }}</span></td>
+            <td>
+                <form action="/vendor/orders/{{ order.id }}/status" method="post" class="inline-form">
+                    <select name="new_status">
+                        <option value="confirmed">Confirmed</option>
+                        <option value="processing">Processing</option>
+                        <option value="ready">Ready</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                    <button type="submit" class="btn btn-small">Update</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">No orders yet.</p>
+{% endif %}
+{% endblock %}

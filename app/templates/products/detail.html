@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import "partials/product_card.html" as pc %}
+{% block title %}{{ product.name }} — UniMarket{% endblock %}
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-image">
+        {% if product.image %}
+        <img src="{{ product.image }}" alt="{{ product.name }}">
+        {% else %}
+        <div class="image-placeholder large">{{ product.name[:1] }}</div>
+        {% endif %}
+    </div>
+
+    <div class="product-detail-info">
+        <p class="product-category">{{ product.category.name }}</p>
+        <h1>{{ product.name }}</h1>
+        <p class="product-vendor">Sold by <a href="/stores/{{ product.vendor.store_slug }}">{{ product.vendor.store_name }}</a></p>
+
+        <div class="product-price-row large">
+            <span class="price">₦{{ "{:,.2f}".format(product.price) }}</span>
+            {% if product.previous_price and product.previous_price > product.price %}
+            <span class="price-old">₦{{ "{:,.2f}".format(product.previous_price) }}</span>
+            <span class="badge-discount">-{{ product.discount_percentage }}%</span>
+            {% endif %}
+        </div>
+
+        <p class="stock-label stock-{{ product.stock_label|replace(' ', '-')|lower }}">{{ product.stock_label }} ({{ product.quantity_available }} available)</p>
+        {% if product.review_count %}<p class="rating">⭐ {{ product.average_rating }} ({{ product.review_count }} reviews)</p>{% endif %}
+
+        <p>{{ product.short_description or '' }}</p>
+
+        {% if product.quantity_available > 0 %}
+        <form action="/cart/add" method="post" class="add-to-cart-form">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <label>Qty <input type="number" name="quantity" value="1" min="1" max="{{ product.quantity_available }}"></label>
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+        {% else %}
+        <p class="alert alert-error">Out of stock</p>
+        {% endif %}
+
+        {% if user %}
+        <form action="/wishlist/add" method="post" class="inline-form">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="hidden" name="next" value="/products/{{ product.slug }}">
+            <button type="submit" class="btn btn-outline" {% if in_wishlist %}disabled{% endif %}>
+                {% if in_wishlist %}♥ In Wishlist{% else %}♡ Add to Wishlist{% endif %}
+            </button>
+        </form>
+        {% endif %}
+
+        <div class="meta-list">
+            <span>Brand: {{ product.brand or 'N/A' }}</span>
+            <span>Condition: {{ product.condition.value|title }}</span>
+        </div>
+    </div>
+</div>
+
+<section class="section">
+    <h2>Description</h2>
+    <p>{{ product.description or 'No description provided.' }}</p>
+</section>
+
+<section class="section">
+    <h2>Reviews</h2>
+    {% if user %}
+    <form action="/products/{{ product.slug }}/reviews" method="post" class="form-grid review-form">
+        <label>Rating
+            <select name="rating">
+                {% for r in [5,4,3,2,1] %}
+                <option value="{{ r }}" {% if my_review and my_review.rating == r %}selected{% endif %}>{{ r }} stars</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Comment<textarea name="comment">{{ my_review.comment if my_review else '' }}</textarea></label>
+        <button type="submit" class="btn btn-primary">{{ 'Update Review' if my_review else 'Submit Review' }}</button>
+    </form>
+    {% else %}
+    <p><a href="/login">Log in</a> to leave a review.</p>
+    {% endif %}
+
+    {% for review in reviews %}
+    <div class="review-item">
+        <strong>{{ review.user.username }}</strong> &mdash; ⭐ {{ review.rating }}
+        <p>{{ review.comment }}</p>
+        <span class="muted">{{ review.created_at.strftime('%d %b %Y') }}</span>
+    </div>
+    {% else %}
+    <p class="empty-state">No reviews yet. Be the first!</p>
+    {% endfor %}
+</section>
+
+{% if related %}
+<section class="section">
+    <h2>Related Products</h2>
+    <div class="product-grid">
+        {% for p in related %}{{ pc.product_card(p) }}{% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

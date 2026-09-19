@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Manage Reviews — Admin{% endblock %}
+{% block content %}
+<h1>Manage Reviews</h1>
+{% for review in reviews %}
+<div class="review-item">
+    <strong>{{ review.user.username }}</strong> on <a href="/products/{{ review.product.slug }}">{{ review.product.name }}</a>
+    &mdash; ⭐ {{ review.rating }}
+    <span class="status status-{{ 'confirmed' if review.is_approved else 'cancelled' }}">{{ 'Approved' if review.is_approved else 'Hidden' }}</span>
+    <p>{{ review.comment }}</p>
+    <form action="/admin/reviews/{{ review.id }}/toggle-approved" method="post" class="inline-form">
+        <button type="submit" class="link-button {{ 'danger' if review.is_approved else '' }}">
+            {{ 'Hide Review' if review.is_approved else 'Approve Review' }}
+        </button>
+    </form>
+</div>
+{% else %}
+<p class="empty-state">No reviews yet.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }} — UniMarket{% endblock %}
+{% block content %}
+<h1>Order {{ order.order_number }}</h1>
+<p><span class="status status-{{ order.status.value }}">{{ order.status.value.replace('_', ' ')|title }}</span>
+&middot; Placed {{ order.created_at.strftime('%d %b %Y, %H:%M') }}
+&middot; Payment status: {{ order.payment_status_display }}</p>
+
+{% if request.query_params.get('paid') %}
+<p class="alert alert-success">✅ Payment received — thank you!</p>
+{% elif request.query_params.get('payment_failed') %}
+<p class="alert alert-danger">❌ Payment did not go through. You can try again below.</p>
+{% elif request.query_params.get('payment_error') %}
+<p class="alert alert-danger">{{ request.query_params.get('payment_error') }}</p>
+{% endif %}
+
+{% if order.payment and order.payment.status.value not in ('paid',) %}
+<form action="/payments/orders/{{ order.id }}/pay" method="get">
+    <button type="submit" class="btn">Pay Now — ₦{{ "{:,.2f}".format(order.total) }}</button>
+</form>
+{% endif %}
+
+<div class="card">
+    <h2>Items</h2>
+    <table class="table">
+        <thead><tr><th>Product</th><th>Unit Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+        <tbody>
+        {% for item in order.items %}
+        <tr>
+            <td>{{ item.product_name_snapshot }}</td>
+            <td>₦{{ "{:,.2f}".format(item.unit_price) }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₦{{ "{:,.2f}".format(item.subtotal) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>Subtotal: ₦{{ "{:,.2f}".format(order.subtotal) }}</p>
+    <p>Delivery Fee: ₦{{ "{:,.2f}".format(order.delivery_fee) }}</p>
+    <p class="total">Total: ₦{{ "{:,.2f}".format(order.total) }}</p>
+</div>
+
+<div class="card">
+    <h2>Delivery Information</h2>
+    <p>{{ order.recipient_name }} &middot; {{ order.phone_number }}</p>
+    <p>{{ order.university }}, {{ order.hostel }}{% if order.block %}, Block {{ order.block }}{% endif %}{% if order.room %}, Room {{ order.room }}{% endif %}</p>
+    {% if order.campus_location %}<p>{{ order.campus_location }}</p>{% endif %}
+    {% if order.delivery_instructions %}<p class="muted">{{ order.delivery_instructions }}</p>{% endif %}
+</div>
+
+{% if order.is_cancellable %}
+<form action="/orders/{{ order.id }}/cancel" method="post" onsubmit="return confirm('Cancel this order?');">
+    <button type="submit" class="btn btn-outline danger">Cancel Order</button>
+</form>
+{% endif %}
+{% endblock %}

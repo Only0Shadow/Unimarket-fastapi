@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% import "partials/product_card.html" as pc %}
+{% import "partials/pagination.html" as pg %}
+{% block title %}Shop — UniMarket{% endblock %}
+{% block content %}
+<div class="shop-layout">
+    <aside class="filters">
+        <form method="get" action="/shop" class="form-grid">
+            <input type="hidden" name="q" value="{{ filters.q }}">
+            <label>Category
+                <select name="category">
+                    <option value="">All Categories</option>
+                    {% for c in categories %}
+                    <option value="{{ c.slug }}" {% if c.slug == filters.category %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Min Price<input type="number" step="0.01" name="min_price" value="{{ filters.min_price or '' }}"></label>
+            <label>Max Price<input type="number" step="0.01" name="max_price" value="{{ filters.max_price or '' }}"></label>
+            <label>Condition
+                <select name="condition">
+                    <option value="">Any</option>
+                    <option value="new" {% if filters.condition == 'new' %}selected{% endif %}>New</option>
+                    <option value="used" {% if filters.condition == 'used' %}selected{% endif %}>Used</option>
+                    <option value="refurbished" {% if filters.condition == 'refurbished' %}selected{% endif %}>Refurbished</option>
+                </select>
+            </label>
+            <label>Min Rating
+                <select name="rating">
+                    <option value="">Any</option>
+                    {% for r in [4,3,2,1] %}<option value="{{ r }}" {% if filters.rating == r %}selected{% endif %}>{{ r }}+ stars</option>{% endfor %}
+                </select>
+            </label>
+            <label class="checkbox-label"><input type="checkbox" name="in_stock" {% if filters.in_stock %}checked{% endif %}> In stock only</label>
+            <label>Sort by
+                <select name="sort">
+                    <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="oldest" {% if filters.sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="price_low" {% if filters.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if filters.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="popularity" {% if filters.sort == 'popularity' %}selected{% endif %}>Popularity</option>
+                    <option value="rating" {% if filters.sort == 'rating' %}selected{% endif %}>Rating</option>
+                </select>
+            </label>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </form>
+    </aside>
+
+    <div class="shop-results">
+        <h1>Shop</h1>
+        {% if page_obj.items %}
+        <div class="product-grid">
+            {% for product in page_obj.items %}{{ pc.product_card(product) }}{% endfor %}
+        </div>
+        {{ pg.pagination(page_obj, '/shop') }}
+        {% else %}
+        <p class="empty-state">No products match your filters. Try broadening your search.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

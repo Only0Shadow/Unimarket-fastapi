@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if product else 'Add' }} Product — UniMarket{% endblock %}
+{% block content %}
+<h1>{{ 'Edit' if product else 'Add' }} Product</h1>
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form method="post" action="{{ '/vendor/products/' + product.id|string + '/edit' if product else '/vendor/products/new' }}" class="form-grid">
+    <label>Name<input type="text" name="name" value="{{ product.name if product else '' }}" required></label>
+    <label>Short description<input type="text" name="short_description" value="{{ product.short_description if product else '' }}"></label>
+    <label>Full description<textarea name="description">{{ product.description if product else '' }}</textarea></label>
+    <label>Category
+        <select name="category_id" required>
+            {% for c in categories %}
+            <option value="{{ c.id }}" {% if product and product.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Price<input type="number" step="0.01" name="price" value="{{ product.price if product else '' }}" required></label>
+    <label>Previous price (optional)<input type="number" step="0.01" name="previous_price" value="{{ product.previous_price if product and product.previous_price else '' }}"></label>
+    <label>Quantity available<input type="number" name="quantity_available" value="{{ product.quantity_available if product else 0 }}" required></label>
+    <label>Brand<input type="text" name="brand" value="{{ product.brand if product else '' }}"></label>
+    <label>Condition
+        <select name="condition">
+            <option value="new" {% if product and product.condition.value == 'new' %}selected{% endif %}>New</option>
+            <option value="used" {% if product and product.condition.value == 'used' %}selected{% endif %}>Used</option>
+            <option value="refurbished" {% if product and product.condition.value == 'refurbished' %}selected{% endif %}>Refurbished</option>
+        </select>
+    </label>
+    <label>Image URL<input type="text" name="image" value="{{ product.image if product else '' }}"></label>
+    <label class="checkbox-label"><input type="checkbox" name="is_featured" {% if product and product.is_featured %}checked{% endif %}> Featured</label>
+    {% if product %}
+    <label class="checkbox-label"><input type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}> Active</label>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">{{ 'Save Changes' if product else 'Create Product' }}</button>
+</form>
+{% endblock %}

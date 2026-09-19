@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Local databases
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+
+# OS/editor cruft
+.DS_Store
+.vscode/
+.idea/
+
+# Alembic keeps migrations, but not cached bytecode
+migrations/versions/__pycache__/

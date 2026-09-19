@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Manage Orders — Admin{% endblock %}
+{% block content %}
+<h1>Manage Orders</h1>
+<table class="table">
+    <thead><tr><th>Order #</th><th>Customer</th><th>Status</th><th>Total</th><th>Update</th></tr></thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td><a href="/orders/{{ order.id }}">{{ order.order_number }}</a></td>
+            <td>{{ order.customer.username }}</td>
+            <td><span class="status status-{{ order.status.value }}">{{ order.status.value.replace('_', ' ')|title }}</span></td>
+            <td>₦{{ "{:,.2f}".format(order.total) }}</td>
+            <td>
+                <form action="/admin/orders/{{ order.id }}/status" method="post" class="inline-form">
+                    <select name="new_status">
+                        {% for s in ['pending','confirmed','processing','ready','out_for_delivery','delivered','cancelled'] %}
+                        <option value="{{ s }}" {% if order.status.value == s %}selected{% endif %}>{{ s.replace('_', ' ')|title }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-small">Update</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

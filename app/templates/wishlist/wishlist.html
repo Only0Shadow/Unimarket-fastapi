@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist — UniMarket{% endblock %}
+{% block content %}
+<h1>My Wishlist</h1>
+{% if wishlist.items %}
+<div class="product-grid">
+    {% for item in wishlist.items %}
+    <div class="product-card">
+        <a href="/products/{{ item.product.slug }}" class="product-card-image">
+            {% if item.product.image %}<img src="{{ item.product.image }}" alt="{{ item.product.name }}">{% else %}<div class="image-placeholder">{{ item.product.name[:1] }}</div>{% endif %}
+        </a>
+        <div class="product-card-body">
+            <a href="/products/{{ item.product.slug }}"><h3 class="product-name">{{ item.product.name }}</h3></a>
+            <p class="price">₦{{ "{:,.2f}".format(item.product.price) }}</p>
+            <div class="cart-actions">
+                <form action="/wishlist/items/{{ item.id }}/move-to-cart" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-small">Move to Cart</button>
+                </form>
+                <form action="/wishlist/items/{{ item.id }}/remove" method="post" class="inline-form">
+                    <button type="submit" class="link-button danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">Your wishlist is empty. <a href="/shop">Browse products &raquo;</a></p>
+{% endif %}
+{% endblock %}

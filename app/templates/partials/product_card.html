@@ -1,0 +1,32 @@
+{% macro product_card(product) %}
+<div class="product-card">
+    <a href="/products/{{ product.slug }}" class="product-card-image">
+        {% if product.image %}
+        <img src="{{ product.image }}" alt="{{ product.name }}">
+        {% else %}
+        <div class="image-placeholder">{{ product.name[:1] }}</div>
+        {% endif %}
+        {% if product.discount_percentage %}<span class="badge-discount">-{{ product.discount_percentage }}%</span>{% endif %}
+    </a>
+    <div class="product-card-body">
+        <p class="product-category">{{ product.category.name }}</p>
+        <a href="/products/{{ product.slug }}"><h3 class="product-name">{{ product.name }}</h3></a>
+        <p class="product-vendor">{{ product.vendor.store_name }}</p>
+        <div class="product-price-row">
+            <span class="price">₦{{ "{:,.2f}".format(product.price) }}</span>
+            {% if product.previous_price and product.previous_price > product.price %}
+            <span class="price-old">₦{{ "{:,.2f}".format(product.previous_price) }}</span>
+            {% endif %}
+        </div>
+        <p class="stock-label stock-{{ product.stock_label|replace(' ', '-')|lower }}">{{ product.stock_label }}</p>
+        {% if product.review_count %}
+        <p class="rating">⭐ {{ product.average_rating }} ({{ product.review_count }})</p>
+        {% endif %}
+        <form action="/cart/add" method="post" class="inline-form">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-small" {% if product.quantity_available == 0 %}disabled{% endif %}>Add to Cart</button>
+        </form>
+    </div>
+</div>
+{% endmacro %}
