@@ -6,17 +6,21 @@
     <title>{% block title %}University Marketplace{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
-<body>
+<body class="no-js">
     <header class="navbar">
         <div class="navbar-inner">
             <a class="brand" href="/">🎓 Uni<span>Market</span></a>
+
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+                <span></span><span></span><span></span>
+            </button>
 
             <form class="nav-search" action="/search" method="get">
                 <input type="text" name="q" placeholder="Search products, stores, categories..." value="{{ request.query_params.get('q', '') }}">
                 <button type="submit">Search</button>
             </form>
 
-            <nav class="nav-links">
+            <nav class="nav-links" id="navLinks">
                 <a href="/shop">Shop</a>
                 <a href="/categories">Categories</a>
                 <a href="/stores">Stores</a>
