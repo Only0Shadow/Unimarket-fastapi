@@ -1,3 +1,5 @@
+from fastapi import UploadFile, File
+import cloudinary.uploader
 """Vendor-facing routes: apply to sell, manage store, dashboard, own products."""
 from fastapi import APIRouter, Depends, Request, Form, status, Query
 from fastapi.responses import RedirectResponse, HTMLResponse
@@ -183,12 +185,18 @@ def edit_product_submit(
     brand: str = Form(""),
     condition: str = Form("new"),
     image: str = Form(""),
+    image_file: UploadFile = File(None),
     is_featured: bool = Form(False),
     is_active: bool = Form(True),
 ):
     product = products_service.get_product_owned(db, product_id, user.vendor.id)
     if product is None:
         return templates.TemplateResponse(request, "errors/404.html", {"user": user}, status_code=404)
+
+    # If a new image file was uploaded, send it to Cloudinary
+    if image_file and image_file.filename:
+        result = cloudinary.uploader.upload(image_file.file)
+        image = result["secure_url"]
     try:
         data = ProductIn(
             name=name,

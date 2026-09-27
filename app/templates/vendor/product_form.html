@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ 'Edit' if product else 'Add' }} Product</h1>
 {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
-<form method="post" action="{{ '/vendor/products/' + product.id|string + '/edit' if product else '/vendor/products/new' }}" class="form-grid">
+<form method="post" action="{{ '/vendor/products/' + product.id|string + '/edit' if product else '/vendor/products/new' }}" class="form-grid" enctype="multipart/form-data">
     <label>Name<input type="text" name="name" value="{{ product.name if product else '' }}" required></label>
     <label>Short description<input type="text" name="short_description" value="{{ product.short_description if product else '' }}"></label>
     <label>Full description<textarea name="description">{{ product.description if product else '' }}</textarea></label>
@@ -25,7 +25,13 @@
             <option value="refurbished" {% if product and product.condition.value == 'refurbished' %}selected{% endif %}>Refurbished</option>
         </select>
     </label>
-    <label>Image URL<input type="text" name="image" value="{{ product.image if product else '' }}"></label>
+        <label>Upload Image
+                <input type="file" name="image_file" accept="image/*">
+        </label>
+        <!-- Shows current image if one exists -->
+        {% if product and product.image %}
+                <img src="{{ product.image }}" alt="Current image" style="width:100px; margin-top:8px; border-radius:8px;">
+        {% endif %}
     <label class="checkbox-label"><input type="checkbox" name="is_featured" {% if product and product.is_featured %}checked{% endif %}> Featured</label>
     {% if product %}
     <label class="checkbox-label"><input type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}> Active</label>
