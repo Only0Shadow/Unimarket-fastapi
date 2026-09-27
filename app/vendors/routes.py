@@ -128,8 +128,12 @@ def create_product_submit(
     brand: str = Form(""),
     condition: str = Form("new"),
     image: str = Form(""),
+    image_file: UploadFile = File(None),
     is_featured: bool = Form(False),
 ):
+    if image_file and image_file.filename:
+        result = cloudinary.uploader.upload(image_file.file)
+        image = result["secure_url"]
     try:
         data = ProductIn(
             name=name,
