@@ -14,3 +14,4 @@ python-dotenv==1.0.1
 pytest==8.3.4
 httpx==0.28.1
 cloudinary==1.46.2
+psycopg2-binary
