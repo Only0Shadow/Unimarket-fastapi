@@ -26,7 +26,7 @@ def _publicly_visible_base_stmt():
         select(Product)
         .join(Vendor, Product.vendor_id == Vendor.id)
         .where(Product.is_active.is_(True), Vendor.status == VendorStatus.APPROVED)
-        .distinct(Product.id)
+        .group_by(Product.id)
     )
 
 
