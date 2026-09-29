@@ -130,11 +130,11 @@ def search_products(
     # Select only the primary key into the subquery so the count doesn't
     # drag along every joined column (which previously produced a spurious
     # cartesian-product warning).
-    count_subquery = stmt.distinct().with_only_columns(Product.id).subquery()
+    count_subquery = stmt.with_only_columns(Product.id).subquery()
     count_stmt = select(func.count()).select_from(count_subquery)
     total = db.execute(count_stmt).scalar_one()
 
-    stmt = stmt.distinct().offset((page - 1) * page_size).limit(page_size)
+    stmt = stmt.offset((page - 1) * page_size).limit(page_size)
     items = list(db.execute(stmt).unique().scalars())
 
     # Minimum-rating filter applied in Python since it depends on the
