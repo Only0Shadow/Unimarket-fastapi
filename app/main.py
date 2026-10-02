@@ -1,3 +1,4 @@
+import cloudinary_config
 """
 Application entrypoint. Wires together configuration, database, static
 files, templates, and every feature router. Kept intentionally thin --
