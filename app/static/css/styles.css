@@ -321,3 +321,67 @@ body { overflow-x: hidden; }
 @media (max-width: 360px) {
     .product-grid, .vendor-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============================================================
+   STORE BANNER & LOGO
+============================================================ */
+.store-banner {
+  width: 100%;
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: -40px;
+}
+
+.store-banner--empty {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.store-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  padding: 0 1.5rem 1.5rem;
+  position: relative;
+}
+
+.store-logo-wrap {
+  flex-shrink: 0;
+}
+
+.store-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  background: white;
+  display: block;
+}
+
+.store-logo-placeholder {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #764ba2;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.store-header-text h1 {
+  margin: 0;
+}
+
+.store-header-text p {
+  margin: 0.25rem 0 0;
+  color: #666;
+}
